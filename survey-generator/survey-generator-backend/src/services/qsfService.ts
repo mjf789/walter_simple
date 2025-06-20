@@ -22,7 +22,7 @@ interface QSFSurvey {
     SurveyID: string;
     Element: string;
     PrimaryAttribute: string;
-    SecondaryAttribute: string;
+    SecondaryAttribute: string | null;
     TertiaryAttribute: string | null;
     Payload: any;
   }>;

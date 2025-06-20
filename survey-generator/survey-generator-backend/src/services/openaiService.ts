@@ -13,12 +13,15 @@ interface ScaleExtractionResponse {
 }
 
 class OpenAIService {
-  private client: OpenAI;
+  private client: OpenAI | null = null;
   
-  constructor() {
-    this.client = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
+  private getClient(): OpenAI {
+    if (!this.client) {
+      this.client = new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY,
+      });
+    }
+    return this.client;
   }
 
   async extractScalesFromText(
@@ -28,7 +31,7 @@ class OpenAIService {
     const prompt = this.buildExtractionPrompt(pdfText, scaleDescription);
     
     try {
-      const completion = await this.client.chat.completions.create({
+      const completion = await this.getClient().chat.completions.create({
         model: 'gpt-4-turbo-preview',
         messages: [
           {

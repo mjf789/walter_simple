@@ -16,22 +16,37 @@ function App() {
   const [error, setError] = useState<string | null>(null);
 
   const handleFilesSelected = async (files: File[]) => {
-    if (files.length === 0) return;
+    console.log('[App] handleFilesSelected called');
+    console.log('[App] Files received:', files);
+    console.log('[App] Number of files:', files.length);
     
+    if (files.length === 0) {
+      console.log('[App] No files received, returning');
+      return;
+    }
+    
+    console.log('[App] Setting isUploading to true');
     setIsUploading(true);
     setError(null);
     
     try {
+      console.log('[App] About to call uploadPDF with file:', files[0].name);
       const response = await uploadPDF(files[0]);
+      console.log('[App] uploadPDF response:', response);
       
       if (response.success) {
+        console.log('[App] Upload successful, updating state');
         setPdfText(response.pdfText);
         setFileName(files[0].name);
         setCurrentStep('processing');
+      } else {
+        console.log('[App] Upload response indicates failure:', response);
       }
     } catch (err) {
+      console.error('[App] Error during upload:', err);
       setError('Failed to upload and parse PDF. Please try again.');
     } finally {
+      console.log('[App] Setting isUploading to false');
       setIsUploading(false);
     }
   };

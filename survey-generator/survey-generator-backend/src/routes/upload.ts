@@ -19,7 +19,20 @@ const upload = multer({
   }
 });
 
-router.post('/', upload.single('pdf'), uploadController.handlePdfUpload);
+// Add middleware to log incoming requests
+router.use((req, res, next) => {
+  console.log('[Upload Route] Incoming request to:', req.path);
+  console.log('[Upload Route] Method:', req.method);
+  console.log('[Upload Route] Content-Type:', req.headers['content-type']);
+  next();
+});
+
+router.post('/', upload.single('pdf'), (req, res, next) => {
+  console.log('[Upload Route] Post request to / received');
+  console.log('[Upload Route] After multer - file exists:', !!req.file);
+  next();
+}, uploadController.handlePdfUpload);
+
 router.post('/multiple', upload.array('pdfs', 5), uploadController.handleMultiplePdfUpload);
 
 export default router;

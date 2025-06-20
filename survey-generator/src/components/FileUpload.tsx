@@ -29,6 +29,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFilesSelected }) => {
   };
 
   const handleNext = () => {
+    console.log('[FileUpload] Next button clicked');
+    console.log('[FileUpload] Files to upload:', files);
+    console.log('[FileUpload] Number of files:', files.length);
     onFilesSelected(files);
   };
 

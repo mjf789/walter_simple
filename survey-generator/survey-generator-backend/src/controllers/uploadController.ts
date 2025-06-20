@@ -4,7 +4,14 @@ import pdf from 'pdf-parse';
 export const uploadController = {
   handlePdfUpload: async (req: Request, res: Response) => {
     try {
+      console.log('[UploadController] Upload request received');
+      console.log('[UploadController] Request headers:', req.headers);
+      console.log('[UploadController] Request body:', req.body);
+      console.log('[UploadController] Request file:', req.file);
+      console.log('[UploadController] Request files:', req.files);
+      
       if (!req.file) {
+        console.log('[UploadController] No file in request - sending 400 error');
         res.status(400).json({ error: 'No file uploaded' });
         return;
       }
