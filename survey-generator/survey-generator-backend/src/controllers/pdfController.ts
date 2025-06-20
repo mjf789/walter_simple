@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import pdf from 'pdf-parse';
+import openaiService from '../services/openaiService';
 
 export const pdfController = {
   parsePdf: async (req: Request, res: Response) => {
@@ -36,11 +37,14 @@ export const pdfController = {
         return;
       }
 
-      // Placeholder for AI extraction logic
+      // Use retry mechanism for AI extraction
+      const extractedData = await openaiService.retryWithExponentialBackoff(
+        () => openaiService.extractScalesFromText(text, scaleDescription)
+      );
+
       res.json({
         success: true,
-        message: 'Scale extraction endpoint ready',
-        placeholder: true
+        data: extractedData
       });
     } catch (error) {
       console.error('Scale extraction error:', error);

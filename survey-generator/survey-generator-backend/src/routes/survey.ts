@@ -4,6 +4,6 @@ import { surveyController } from '../controllers/surveyController';
 const router = Router();
 
 router.post('/generate-qsf', surveyController.generateQSF);
-router.get('/download/:id', surveyController.downloadQSF);
+router.post('/download/:id', surveyController.downloadQSF);
 
 export default router;

@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import qsfService from '../services/qsfService';
 
 export const surveyController = {
   generateQSF: async (req: Request, res: Response) => {
@@ -10,29 +11,25 @@ export const surveyController = {
         return;
       }
 
-      // Placeholder for QSF generation logic
-      const qsfData = {
-        SurveyEntry: {
-          SurveyID: `SV_${Date.now()}`,
-          SurveyName: surveyData.name || 'Generated Survey',
-          SurveyDescription: surveyData.description || '',
-          SurveyOwnerID: 'OWNER_ID',
-          SurveyBrandID: 'BRAND_ID',
-          DivisionID: null,
-          SurveyLanguage: 'EN',
-          SurveyActiveResponseSet: 'RS_DEFAULT',
-          SurveyStatus: 'Inactive',
-          SurveyStartDate: new Date().toISOString(),
-          SurveyExpirationDate: null,
-          SurveyCreationDate: new Date().toISOString(),
-          CreatorID: 'CREATOR_ID',
-          LastModified: new Date().toISOString(),
-          LastAccessed: new Date().toISOString(),
-          LastActivated: null,
-          Deleted: null
-        },
-        SurveyElements: []
-      };
+      const { scaleName, items, instructions } = surveyData;
+      
+      if (!scaleName || !items || items.length === 0) {
+        res.status(400).json({ error: 'Invalid survey data' });
+        return;
+      }
+
+      // Generate QSF
+      const qsfData = qsfService.generateQSF(scaleName, items, instructions);
+      
+      // Validate QSF
+      const validation = qsfService.validateQSF(qsfData);
+      if (!validation.valid) {
+        res.status(400).json({ 
+          error: 'Invalid QSF generated', 
+          validationErrors: validation.errors 
+        });
+        return;
+      }
 
       res.json({
         success: true,
@@ -47,14 +44,19 @@ export const surveyController = {
 
   downloadQSF: async (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
+      const { qsfData } = req.body;
       
-      // Placeholder for download logic
-      res.json({
-        success: true,
-        message: 'Download endpoint ready',
-        surveyId: id
-      });
+      if (!qsfData) {
+        res.status(400).json({ error: 'No QSF data provided' });
+        return;
+      }
+
+      const qsfContent = qsfService.exportToFile(qsfData);
+      const filename = `survey_${qsfData.SurveyEntry.SurveyID}.qsf`;
+
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      res.send(qsfContent);
     } catch (error) {
       console.error('Download error:', error);
       res.status(500).json({ error: 'Failed to download QSF' });

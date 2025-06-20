@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import GlassCard from './ui/GlassCard';
 import GlassButton from './ui/GlassButton';
+import Tooltip from './ui/Tooltip';
 
 interface FileUploadProps {
   onFilesSelected: (files: File[]) => void;
@@ -36,6 +37,12 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFilesSelected }) => {
       <h1 className="text-4xl font-bold text-center mb-8 text-text-primary">
         AI Survey Generator
       </h1>
+      
+      <div className="text-center mb-6">
+        <p className="text-text-secondary">
+          Upload PDF documents containing survey scales or questionnaires
+        </p>
+      </div>
       
       <GlassCard className="mb-6">
         <div
@@ -79,10 +86,11 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFilesSelected }) => {
                 className="flex items-center justify-between p-3 rounded-lg bg-white/5"
               >
                 <span className="text-text-primary truncate">{file.name}</span>
-                <button
-                  onClick={() => removeFile(index)}
-                  className="text-red-400 hover:text-red-300 ml-2"
-                >
+                <Tooltip content="Remove file">
+                  <button
+                    onClick={() => removeFile(index)}
+                    className="text-red-400 hover:text-red-300 ml-2"
+                  >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
@@ -91,7 +99,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFilesSelected }) => {
                       d="M6 18L18 6M6 6l12 12"
                     />
                   </svg>
-                </button>
+                  </button>
+                </Tooltip>
               </div>
             ))}
           </div>
