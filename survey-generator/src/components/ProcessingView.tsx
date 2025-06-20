@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import GlassCard from './ui/GlassCard';
 import GlassButton from './ui/GlassButton';
@@ -56,27 +56,28 @@ const ProcessingView: React.FC<ProcessingViewProps> = ({
       animate={{ opacity: 1, y: 0 }}
       className="w-full max-w-4xl mx-auto p-6"
     >
-      <h2 className="text-3xl font-bold text-center mb-8">Extract Survey Scales</h2>
+      <h2 className="text-4xl font-bold text-center mb-8 tracking-tight">Extract Survey Scales</h2>
 
       <GlassCard className="mb-6">
-        <div className="mb-4">
-          <p className="text-text-secondary mb-2">Processing file:</p>
-          <p className="text-lg font-medium">{fileName}</p>
+        <div className="mb-6 p-4 bg-glass-light rounded-xl border border-glass-border">
+          <p className="text-sm text-text-secondary mb-1">Processing file</p>
+          <p className="text-lg font-semibold text-text-primary">{fileName}</p>
         </div>
 
         {step === 'input' && (
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-base font-medium mb-3 text-text-primary">
               Describe the scale or measure you want to extract:
             </label>
             <textarea
               value={scaleDescription}
               onChange={(e) => setScaleDescription(e.target.value)}
               placeholder="e.g., 'Beck Depression Inventory' or 'Self-efficacy scale with 10 items'"
-              className="w-full p-3 rounded-lg bg-white/5 border border-white/10 
+              className="w-full p-4 rounded-xl bg-glass-light border border-glass-border 
                        focus:border-accent-glow focus:outline-none focus:ring-2 
-                       focus:ring-accent-blue/50 text-white placeholder-text-secondary
-                       min-h-[100px]"
+                       focus:ring-accent-blue/50 text-text-primary placeholder-text-tertiary
+                       min-h-[120px] transition-all duration-200
+                       hover:bg-glass-medium focus:bg-glass-medium"
             />
             {error && (
               <p className="text-red-400 text-sm mt-2">{error}</p>

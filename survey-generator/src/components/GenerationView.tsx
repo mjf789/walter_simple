@@ -49,31 +49,49 @@ const GenerationView: React.FC<GenerationViewProps> = ({
       animate={{ opacity: 1, y: 0 }}
       className="w-full max-w-4xl mx-auto p-6"
     >
-      <h2 className="text-3xl font-bold text-center mb-8">Survey Preview</h2>
+      <h2 className="text-4xl font-bold text-center mb-8 tracking-tight">Survey Preview</h2>
 
-      <GlassCard className="mb-6">
-        <h3 className="text-xl font-semibold mb-4">{extractedData.scaleName}</h3>
+      <GlassCard className="mb-8">
+        <h3 className="text-2xl font-semibold mb-6">{extractedData.scaleName}</h3>
         
-        <div className="mb-6">
-          <p className="text-text-secondary mb-2">Number of items: {extractedData.items.length}</p>
+        <div className="mb-8 space-y-2">
+          <p className="text-text-secondary">
+            <span className="font-medium text-text-primary">Items:</span> {extractedData.items.length}
+          </p>
           {extractedData.instructions && (
-            <p className="text-sm text-text-secondary italic">
-              Instructions: {extractedData.instructions}
-            </p>
+            <div className="mt-4 p-4 bg-glass-light rounded-xl border border-glass-border">
+              <p className="text-sm font-medium text-text-primary mb-1">Instructions</p>
+              <p className="text-sm text-text-secondary">
+                {extractedData.instructions}
+              </p>
+            </div>
           )}
         </div>
 
-        <div className="space-y-3 max-h-96 overflow-y-auto">
+        <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
           {extractedData.items.map((item: any, index: number) => (
-            <div key={index} className="p-3 bg-white/5 rounded-lg">
-              <p className="text-sm font-medium mb-1">Item {index + 1}</p>
-              <p className="text-sm">{item.question}</p>
+            <motion.div 
+              key={index} 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className="p-4 bg-glass-light rounded-xl border border-glass-border
+                         hover:bg-glass-medium hover:border-accent-blue/20 
+                         transition-all duration-200"
+            >
+              <p className="text-sm font-semibold text-accent-blue mb-2">
+                Question {index + 1}
+              </p>
+              <p className="text-base text-text-primary leading-relaxed">{item.question}</p>
               {item.responseType === 'likert' && item.scaleRange && (
-                <p className="text-xs text-text-secondary mt-1">
-                  Scale: {item.scaleRange.min} - {item.scaleRange.max}
+                <p className="text-sm text-text-secondary mt-3">
+                  <span className="inline-flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-accent-blue/50"></span>
+                    Likert scale: {item.scaleRange.min} to {item.scaleRange.max}
+                  </span>
                 </p>
               )}
-            </div>
+            </motion.div>
           ))}
         </div>
 
@@ -90,10 +108,12 @@ const GenerationView: React.FC<GenerationViewProps> = ({
         )}
 
         {txtPreview && (
-          <div className="mt-6 space-y-4">
-            <div className="p-4 bg-white/5 border border-white/10 rounded-lg">
-              <h4 className="text-sm font-medium mb-2 text-text-secondary">TXT Preview:</h4>
-              <pre className="text-xs whitespace-pre-wrap text-text-secondary max-h-48 overflow-y-auto">
+          <div className="mt-8 space-y-4">
+            <div className="p-6 bg-glass-light border border-glass-border rounded-xl">
+              <h4 className="text-base font-semibold mb-3 text-text-primary">TXT Format Preview</h4>
+              <pre className="text-sm font-mono whitespace-pre-wrap text-text-secondary 
+                             max-h-64 overflow-y-auto bg-bg-primary/50 p-4 rounded-lg
+                             border border-glass-border">
                 {txtPreview}
               </pre>
             </div>

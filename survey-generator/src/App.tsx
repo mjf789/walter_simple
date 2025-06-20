@@ -71,8 +71,14 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-bg-primary flex items-center justify-center p-4">
-        <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/5 to-transparent" />
+      <div className="App">
+        {/* Animated Glow Orbs */}
+        <div className="glow-orb glow-orb-1" />
+        <div className="glow-orb glow-orb-2" />
+        <div className="glow-orb glow-orb-3" />
+        <div className="glow-orb glow-orb-4" />
+        
+        <div className="App-content flex items-center justify-center p-4">
         
         {isUploading && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -110,6 +116,7 @@ function App() {
             <p className="text-red-400">{error}</p>
           </div>
         )}
+        </div>
       </div>
     </ErrorBoundary>
   );

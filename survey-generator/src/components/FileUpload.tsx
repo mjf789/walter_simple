@@ -36,13 +36,13 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFilesSelected }) => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6">
-      <h1 className="text-4xl font-bold text-center mb-8 text-text-primary">
-        AI Survey Generator
+    <div className="w-full max-w-4xl mx-auto p-6 animate-fade-in">
+      <h1 className="text-5xl font-bold text-center mb-3 text-text-primary tracking-tight">
+        Welcome to Walter
       </h1>
       
-      <div className="text-center mb-6">
-        <p className="text-text-secondary">
+      <div className="text-center mb-8">
+        <p className="text-text-secondary text-lg">
           Upload PDF documents containing survey scales or questionnaires
         </p>
       </div>
@@ -50,15 +50,20 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFilesSelected }) => {
       <GlassCard className="mb-6">
         <div
           {...getRootProps()}
-          className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-all duration-300 
+          className={`relative border-2 border-dashed rounded-xl p-12 text-center cursor-pointer 
+            transition-all duration-300 overflow-hidden
             ${isDragActive 
-              ? 'border-accent-glow bg-accent-blue/10' 
-              : 'border-accent-blue/50 hover:border-accent-glow hover:bg-accent-blue/5'
+              ? 'border-accent-glow bg-accent-blue/10 shadow-glow scale-[1.02]' 
+              : 'border-accent-blue/30 hover:border-accent-glow hover:bg-accent-blue/5 hover:shadow-glow-sm'
             }`}
         >
           <input {...getInputProps()} />
+          {/* Animated glow behind icon */}
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                          w-32 h-32 bg-accent-blue/20 rounded-full blur-3xl animate-glow-pulse" />
+          
           <svg
-            className="w-16 h-16 mx-auto mb-4 text-accent-blue"
+            className="relative w-16 h-16 mx-auto mb-4 text-accent-blue drop-shadow-glow"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
