@@ -1,13 +1,13 @@
 # AI Survey Generator - Product Plan
 
 ## 🔷 Project Overview
-An AI-powered tool that extracts survey scales and measures from PDF documents and automatically generates Qualtrics-compatible QSF survey blocks.
+An AI-powered tool that extracts survey scales and measures from PDF documents and automatically generates Qualtrics-compatible TXT format surveys.
 
 ### Core Features
 - PDF upload and processing
 - Natural language scale/measure description
 - AI-powered content extraction
-- QSF format generation
+- TXT format generation (Simple and Advanced formats)
 - Sophisticated dark UI with glassmorphism effects
 
 ---
@@ -79,9 +79,9 @@ Backend:
 - [x] Create parsing logic for AI responses
 - [x] Add retry and error handling mechanisms
 
-### Phase 5: QSF Generation ✅ Checkpoint
-- [x] Research QSF format specifications
-- [x] Create QSF template structure
+### Phase 5: Survey Format Generation ✅ Checkpoint
+- [x] Research survey format specifications
+- [x] Create format template structure
 - [x] Build survey block generator
 - [x] Implement item formatting and validation
 - [x] Add export functionality
@@ -151,8 +151,8 @@ Backend:
 - Prompt optimization
 - Response parsing
 
-### Week 7-8: QSF & Polish
-- QSF generation logic
+### Week 7-8: Format Generation & Polish
+- TXT format generation logic
 - End-to-end testing
 - UI refinements
 
@@ -163,7 +163,7 @@ Backend:
 ### Technical Metrics
 - PDF processing accuracy: >95%
 - Scale extraction precision: >90%
-- QSF generation validity: 100%
+- TXT format generation validity: 100%
 - Response time: <30s per PDF
 
 ### User Experience Metrics
@@ -194,7 +194,7 @@ Backend:
 ### Integration Tests
 - End-to-end workflow testing
 - AI response validation
-- QSF output verification
+- TXT format output verification
 
 ### User Testing
 - Usability testing sessions
@@ -220,7 +220,7 @@ Backend:
 1. Single PDF upload
 2. Basic scale description input
 3. AI-powered extraction
-4. Simple QSF generation
+4. Simple TXT format generation
 5. Download functionality
 
 ### Post-MVP Priorities
@@ -263,11 +263,11 @@ Backend:
 - JSON response parsing with validation
 - Exponential backoff retry mechanism
 
-### ✅ Phase 5 - QSF Generation (100% Complete)
-- Complete QSF format implementation
+### ✅ Phase 5 - Survey Format Generation (100% Complete)
+- Complete format implementation
 - Survey block and flow generation
 - Support for likert, multiple choice, and text questions
-- QSF validation system
+- Format validation system
 - Export to file functionality
 
 ### ✅ Phase 6 - Integration & Polish (100% Complete)
@@ -277,9 +277,57 @@ Backend:
 - Tooltip system for user guidance
 - Optimized API calls and error handling
 
-## 🎉 Project Complete!
-All 6 phases have been successfully implemented. The AI Survey Generator is now fully functional with:
+## 🎉 Initial Phases Complete!
+All 6 initial phases have been successfully implemented. The AI Survey Generator now has:
 - PDF upload and parsing
 - AI-powered scale extraction
-- QSF survey generation
+- Survey data extraction and preview
 - Complete user workflow with error handling
+
+---
+
+## ✅ Phase 7: TXT Format Generation (100% Complete)
+
+### Overview
+Add TXT format generation as an alternative to QSF - same workflow, different output format.
+
+### Phase 7 Checkpoints:
+
+- [x] Create `txtService.ts` in backend services
+- [x] Implement `generateTXT()` method
+- [x] Add `/api/survey/generate-txt` endpoint
+- [x] Add `/api/survey/download-txt` endpoint
+- [x] Update frontend API service to support TXT
+- [x] Add "Download TXT" button in GenerationView
+- [x] Implement `exportToFile()` for TXT format
+
+### Implemented TXT Format (Qualtrics Simple Format):
+Following Qualtrics Simple TXT format specifications:
+- Each question separated by 2 blank lines
+- Export tag (e.g., "Q1.") followed by question text
+- 1 blank line between question and answer choices
+- For likert scales: shows either ALL labels or ALL numbers (no mixing)
+- For multiple choice: direct list of options
+- Preserves original scale format from PDF
+
+Example with complete labels:
+```
+Q1. I am satisfied with my current job
+
+Strongly Disagree
+Disagree  
+Neutral
+Agree
+Strongly Agree
+```
+
+Example with numbers only (when labels are incomplete):
+```
+Q2. How fair is the current policy?
+
+1
+2
+3
+4
+5
+```

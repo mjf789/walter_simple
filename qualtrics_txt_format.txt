@@ -1,0 +1,265 @@
+﻿Preparing a Simple Format TXT or DOCX File
+Simple TXT formatting is appropriate for simple surveys that only have multiple choice and matrix questions. For more options, see Preparing an Advanced Format TXT File below.
+TO FORMAT QUESTIONS IN SIMPLE TXT
+* Each question should be separated by 2 lines of empty text.
+   * You can set the question’s export tag by including it as a string followed by a period before the question text.
+   * Example: If I put “Question12. This is my question,” then Question12 is my export tag.
+* Place choices below the question text with a blank line between the question and the answer choices.
+   * For multiple choice questions, answer choices should be in a bulleted or numbered list, separated from the question text by empty line.
+   * Avoid using “:” in answer choices. You can add these in by editing the question in the survey builder after you’ve imported the file.
+* Make a question multiple answer by adding “[[MultipleAnswer]]” on the line just below the question text.
+* If you include a question with no answer choices, it will automatically become a text / graphic question.
+* Designate a matrix question by separating statements and scale points into two groups with a space in between. The statements are the first group of choices while the scale points are the second group.
+* Designate a new block by adding “[[Block]]”.
+* Insert a page break by adding “[[PageBreak]]”.
+* Add the “[[Randomize]]” tag before the list of answer choices to add simple choice randomization to the question.
+EXAMPLE OF SIMPLE TXT FORMATTING:
+Example – Simple Text File: Example.txt
+MC1. This is a multiple choice question. Every question starts with a
+export tag followed by a period. There should be a blank line between
+the question text and the choices.
+
+
+choice a
+choice b
+choice c
+choice d
+
+
+[[Block:My Block Name]]
+MC2. This is a multiple choice- multiple answer question.
+[[MultipleAnswer]]
+
+
+choice a
+choice b
+choice c
+choice d
+
+
+[[PageBreak]]
+MX1. This is a matrix question that has longer question text.
+It is a matrix question because it has two groups of choices.
+The choices ma, mb, and mc are statements while m1, m2, and m3
+are scale points. 
+
+
+ma
+mb
+mc
+
+
+m1
+m2
+m3
+
+
+MX2. This is a matrix-multiple answer question.
+[[MultipleAnswer]]
+
+
+ma
+mb
+mc
+
+
+m1
+m2
+m3
+
+
+[[Block]]
+MC3. What is your age?
+
+
+0-18
+19-25
+26-34
+35-44
+45+
+Qtip: Having trouble importing your TXT file? Make sure it’s saved in the standard TXT Tab Delimited Text format. If the file is saved in UTF-16, it won’t upload properly.
+________________
+
+
+Was this helpful?YesNo
+________________
+
+
+Preparing an Advanced Format TXT or DOCX File
+When using the Advanced TXT format, each part of the question must be explicitly defined using the “[[]]” tags. The tags begin with “[[” and end with “]]” with no spaces in-between the brackets.
+QUESTION TYPE CODES
+The following is a list of all of the question types compatible with Advanced TXT formatted files.
+Qtip: To add Question ID’s (QIDs) to questions, include the QID after the question type code.
+* [[MC]] – Multiple Choice
+   * [[SingleAnswer]] – Single answer question
+      * [[Vertical]] – Vertical layout
+      * [[Horizontal]] – Horizontal layout
+   * [[MultipleAnswer]] – Multiple answer question
+      * [[Vertical]] – Vertical layout
+      * [[Horizontal]] – Horizontal layout
+   * [[DropDown]] – Dropdown list
+   * [[Select]] – Select box
+   * [[MultiSelect]] – Multiple answer select box
+* [[Matrix]] – Matrix Table
+   * [[SingleAnswer]] – Single answer question
+   * [[MultipleAnswer]] – Multiple answer question
+* [[TextEntry]] or [[TE]] – Text Entry
+   * Text entry questions can also be created by having 2+ consecutive underscore characters in the question text, or if the question text contains the phrases “open text” or “open end.”
+   * [[SingleLine]] – Single line question
+   * [[Essay]] – Essay box question
+   * [[Form]] – Form question
+* [[ConstantSum]] or [[CS]] – Constant Sum
+* [[RankOrder]] or [[RO]] – Rank Order
+* [[Text]] or [[DB]] – Text/Graphic (Descriptive Block)
+OTHER TAGS
+The following is a list of all of the features compatible with Advanced TXT formatted files.
+* [[SimpleFormat]] – Specifies the file is a simple formatted file.
+* [[AdvancedFormat]] – Specifies the file is an advanced formatted file.
+* [[ED:{field}:{value}]] – Adds embedded data to the survey flow with the given field. If a value is specified, then the field will be set to that value.
+* [[Question:{question type code}:{question sub-type code}:{question sub-sub-type code}]]– Specifies a new question with a specific type, either MC, Matrix, TE, CS, RO, or DB. Optionally, a question sub-type code can be used.
+* [[Choices]] – Specifies the choices for a multiple choice question or the statements for a matrix question (one per line after the tag).
+* [[Answers]] – Specifies the choices for a matrix question (one per line after the tag).
+* [[AdvancedChoices]] – Specifies we are using advanced choice formatting, allowing for recode values and multiline choices.
+* [[Choice:{recode value}]] – Specifies the start of a choice. An optional recode value can be used to set the recode value of the choice.
+* [[AdvancedAnswers]] – Specifies we are using advanced answer formatting, allowing for recode values and multiline answers.
+* [[Answer:{recode value}]] – Specifies the start of an answer. An optional recode value can be used to set the recode value of the answer.
+* [[MultipleAnswer]] – Specifies that the question should be a multiple answer question.
+* [[ID:question ID]] – Specifies the question ID.
+* [[PageBreak]] – Specifies a page break.
+* [[Block]] – Specifies a block should begin.
+* [[Block:block name]] – Specifies a block should begin with a specific name.
+EXAMPLE OF ADVANCED .TXT FORMATTING:
+Example – Advanced Text File: AdvancedExample.txt
+[[AdvancedFormat]]
+
+
+[[ED:State]]
+[[ED:Gender]]
+[[ED:SawSurvey:1]]
+
+
+[[Block:MC Block]]
+
+
+[[Question:MC:Dropdown]]
+drop down
+[[Choices]]
+choice a
+choice b
+choice c
+
+
+[[Question:MC:Select]]
+select
+[[Choices]]
+choice a
+choice b
+choice c
+
+
+[[Question:MC:MultiSelect]]
+multiselect
+[[Choices]]
+choice a
+choice b
+choice c
+
+
+[[Question:MC:SingleAnswer:Horizontal]]
+single answer horizontal
+[[Choices]]
+choice a
+choice b
+choice c
+
+
+[[Question:MC:MultipleAnswer:Horizontal]]
+multiple answer horizontal
+[[Choices]]
+choice a
+choice b
+choice c
+
+
+[[Question:TE:Form]]
+This is a form question. Please fill out the following information:
+[[Choices]]
+First Name
+Last Name
+
+
+[[Block]]
+
+
+[[Question:MC]]
+[[ID:q1]]
+This is a multiple choice question. With one value recoded.
+
+
+[[AdvancedChoices]]
+[[Choice]]
+choice a
+with text on
+multiple lines
+[[Choice]]
+choice b
+[[Choice]]
+choice c
+[[Choice:99]]
+N/A with recode 99
+
+
+[[PageBreak]]
+
+
+[[Question:Matrix]]
+This question is a matrix question.
+
+
+It has lots of question text on multiple lines and uses
+advanced answers.
+
+
+[[Choices]]
+statement a
+statement b
+statement c
+[[AdvancedAnswers]]
+[[Answer]]
+answer 1
+[[Answer]]
+answer 2
+[[Answer]]
+answer 3
+
+
+[[PageBreak]]
+
+
+[[Question:Matrix]]
+This question is a matrix question and uses advanced choices and
+answers with recode values.
+
+
+[[AdvancedChoices]]
+[[Choice]]
+choice a
+[[Choice]]
+choice b
+[[Choice]]
+choice c
+[[Choice]]
+choice d
+
+
+[[AdvancedAnswers]]
+[[Answer:10]]
+answer 1 - recode 10
+[[Answer:20]]
+answer 2 - recode 20
+[[Answer:30]]
+answer 3 - recode 30
+
+
+Qtip: Having trouble importing your TXT file? Make sure it’s saved in the standard TXT Tab Delimited Text format. If the file is saved in UTF-16, it won’t upload properly.
+Qtip: HTML coding can be applied to TXT documents to style survey content. Qualtrics Support does not offer assistance or consultation on HTML custom coding. You can always try asking our community of dedicated users instead. If you’d like to know more about our custom coding services, please contact your Qualtrics Account Executive.

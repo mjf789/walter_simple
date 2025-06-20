@@ -81,7 +81,7 @@ Return a JSON object with this structure:
       "scaleRange": {
         "min": 1,
         "max": 7,
-        "labels": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+        "labels": ["label1", "label2", ...] // ONLY if explicitly shown in PDF
       }
     }
   ],
@@ -89,7 +89,15 @@ Return a JSON object with this structure:
   "reverseScored": [3, 5, 8] // item numbers that are reverse scored
 }
 
-Focus on extracting the exact wording of items and response scales.`;
+IMPORTANT RULES:
+1. For scaleRange.labels, ONLY include labels that are EXPLICITLY written in the PDF
+2. If the PDF shows numbers (1-5 or 1-7), preserve that exact range
+3. If only endpoint labels are shown (e.g., "Strongly Disagree" and "Strongly Agree"), 
+   only include those in the labels array at the correct positions, use null for missing middle labels
+4. Labels must match the question content (e.g., fairness questions should have fairness-related labels)
+5. Preserve the exact scale format from the PDF - don't invent or infer labels
+
+Focus on extracting EXACTLY what is shown in the PDF, not what might be typical.`;
   }
 
   private truncateText(text: string, maxLength: number): string {

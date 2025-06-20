@@ -1,65 +1,53 @@
 import { Request, Response } from 'express';
-import qsfService from '../services/qsfService';
+import txtService from '../services/txtService';
 
 export const surveyController = {
-  generateQSF: async (req: Request, res: Response) => {
+  generateTXT: async (req: Request, res: Response): Promise<void> => {
     try {
       const { surveyData } = req.body;
       
       if (!surveyData) {
-        res.status(400).json({ error: 'No survey data provided' });
+        res.status(400).json({ error: 'Survey data is required' });
         return;
       }
 
-      const { scaleName, items, instructions } = surveyData;
+      const txtContent = txtService.generateTXT(surveyData);
       
-      if (!scaleName || !items || items.length === 0) {
-        res.status(400).json({ error: 'Invalid survey data' });
-        return;
-      }
-
-      // Generate QSF
-      const qsfData = qsfService.generateQSF(scaleName, items, instructions);
-      
-      // Validate QSF
-      const validation = qsfService.validateQSF(qsfData);
-      if (!validation.valid) {
-        res.status(400).json({ 
-          error: 'Invalid QSF generated', 
-          validationErrors: validation.errors 
-        });
-        return;
-      }
-
       res.json({
         success: true,
-        qsfData,
-        surveyId: qsfData.SurveyEntry.SurveyID
+        txtContent,
+        message: 'TXT format generated successfully'
       });
     } catch (error) {
-      console.error('QSF generation error:', error);
-      res.status(500).json({ error: 'Failed to generate QSF' });
+      console.error('Error generating TXT:', error);
+      res.status(500).json({ 
+        error: 'Failed to generate TXT format',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   },
 
-  downloadQSF: async (req: Request, res: Response) => {
+  downloadTXT: async (req: Request, res: Response): Promise<void> => {
     try {
-      const { qsfData } = req.body;
+      const { surveyData } = req.body;
       
-      if (!qsfData) {
-        res.status(400).json({ error: 'No QSF data provided' });
+      if (!surveyData) {
+        res.status(400).json({ error: 'Survey data is required' });
         return;
       }
 
-      const qsfContent = qsfService.exportToFile(qsfData);
-      const filename = `survey_${qsfData.SurveyEntry.SurveyID}.qsf`;
-
-      res.setHeader('Content-Type', 'application/json');
-      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-      res.send(qsfContent);
+      const txtBuffer = txtService.generateFile(surveyData);
+      const fileName = `${surveyData.scaleName.replace(/[^a-z0-9]/gi, '_')}_${Date.now()}.txt`;
+      
+      res.setHeader('Content-Type', 'text/plain');
+      res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+      res.send(txtBuffer);
     } catch (error) {
-      console.error('Download error:', error);
-      res.status(500).json({ error: 'Failed to download QSF' });
+      console.error('Error downloading TXT:', error);
+      res.status(500).json({ 
+        error: 'Failed to download TXT file',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   }
 };

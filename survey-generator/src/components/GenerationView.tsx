@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import GlassCard from './ui/GlassCard';
 import GlassButton from './ui/GlassButton';
 import LoadingSpinner from './ui/LoadingSpinner';
-import { generateQSF, downloadQSF } from '../services/api';
+import { generateTXT, downloadTXT } from '../services/api';
 
 interface GenerationViewProps {
   extractedData: any;
@@ -16,44 +16,40 @@ const GenerationView: React.FC<GenerationViewProps> = ({
   onBack,
   onComplete
 }) => {
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [qsfData, setQsfData] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [txtPreview, setTxtPreview] = useState<string | null>(null);
 
-  const handleGenerate = async () => {
-    setIsGenerating(true);
-    setError(null);
-
+  const handleGenerateTXT = async () => {
     try {
-      const response = await generateQSF(extractedData);
-      
-      if (response.success) {
-        setQsfData(response.qsfData);
-      }
-    } catch (err) {
-      setError('Failed to generate QSF. Please try again.');
+      setLoading(true);
+      const response = await generateTXT(extractedData);
+      setTxtPreview(response.txtContent);
+    } catch (error) {
+      console.error('Error generating TXT:', error);
+      alert('Failed to generate TXT format. Please try again.');
     } finally {
-      setIsGenerating(false);
+      setLoading(false);
     }
   };
 
-  const handleDownload = async () => {
-    if (qsfData) {
-      try {
-        await downloadQSF(qsfData);
-      } catch (err) {
-        setError('Failed to download file.');
-      }
+  const handleDownloadTXT = async () => {
+    try {
+      setLoading(true);
+      await downloadTXT(extractedData);
+    } catch (error) {
+      console.error('Error downloading TXT:', error);
+      alert('Failed to download TXT file. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="w-full max-w-4xl mx-auto p-6"
     >
-      <h2 className="text-3xl font-bold text-center mb-8">Generate QSF Survey</h2>
+      <h2 className="text-3xl font-bold text-center mb-8">Survey Preview</h2>
 
       <GlassCard className="mb-6">
         <h3 className="text-xl font-semibold mb-4">{extractedData.scaleName}</h3>
@@ -81,23 +77,38 @@ const GenerationView: React.FC<GenerationViewProps> = ({
           ))}
         </div>
 
-        {error && (
-          <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-            <p className="text-red-400 text-sm">{error}</p>
+        {!txtPreview && (
+          <div className="mt-6 flex justify-center">
+            <GlassButton
+              onClick={handleGenerateTXT}
+              disabled={loading}
+              className="px-6"
+            >
+              {loading ? <LoadingSpinner size="small" /> : 'Generate TXT Format'}
+            </GlassButton>
           </div>
         )}
 
-        {qsfData && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mt-6 p-4 bg-green-500/10 border border-green-500/20 rounded-lg"
-          >
-            <p className="text-green-400 font-medium mb-2">QSF Generated Successfully!</p>
-            <p className="text-sm text-text-secondary">
-              Survey ID: {qsfData.SurveyEntry.SurveyID}
-            </p>
-          </motion.div>
+        {txtPreview && (
+          <div className="mt-6 space-y-4">
+            <div className="p-4 bg-white/5 border border-white/10 rounded-lg">
+              <h4 className="text-sm font-medium mb-2 text-text-secondary">TXT Preview:</h4>
+              <pre className="text-xs whitespace-pre-wrap text-text-secondary max-h-48 overflow-y-auto">
+                {txtPreview}
+              </pre>
+            </div>
+            
+            <div className="flex justify-center">
+              <GlassButton
+                onClick={handleDownloadTXT}
+                disabled={loading}
+                variant="primary"
+                className="px-6"
+              >
+                {loading ? <LoadingSpinner size="small" /> : 'Download TXT File'}
+              </GlassButton>
+            </div>
+          </div>
         )}
       </GlassCard>
 
@@ -105,46 +116,16 @@ const GenerationView: React.FC<GenerationViewProps> = ({
         <GlassButton
           onClick={onBack}
           variant="secondary"
-          disabled={isGenerating}
         >
           Back
         </GlassButton>
 
-        <div className="flex gap-3">
-          {!qsfData && (
-            <GlassButton
-              onClick={handleGenerate}
-              variant="primary"
-              disabled={isGenerating}
-            >
-              {isGenerating ? (
-                <>
-                  <LoadingSpinner size="small" />
-                  <span className="ml-2">Generating...</span>
-                </>
-              ) : (
-                'Generate QSF'
-              )}
-            </GlassButton>
-          )}
-
-          {qsfData && (
-            <>
-              <GlassButton
-                onClick={handleDownload}
-                variant="primary"
-              >
-                Download QSF
-              </GlassButton>
-              <GlassButton
-                onClick={onComplete}
-                variant="secondary"
-              >
-                Start New
-              </GlassButton>
-            </>
-          )}
-        </div>
+        <GlassButton
+          onClick={onComplete}
+          variant="secondary"
+        >
+          Start New
+        </GlassButton>
       </div>
     </motion.div>
   );

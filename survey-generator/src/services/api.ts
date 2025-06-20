@@ -83,24 +83,24 @@ export const extractScales = async (pdfText: string, scaleDescription: string) =
   return response.data;
 };
 
-export const generateQSF = async (surveyData: any) => {
-  const response = await api.post('/survey/generate-qsf', {
+export const generateTXT = async (surveyData: any) => {
+  const response = await api.post('/survey/generate-txt', {
     surveyData,
   });
-
   return response.data;
 };
 
-export const downloadQSF = async (qsfData: any) => {
-  const response = await api.post('/survey/download/1', { qsfData }, {
+export const downloadTXT = async (surveyData: any) => {
+  const response = await api.post('/survey/download-txt', { surveyData }, {
     responseType: 'blob',
   });
-
+  
   // Create download link
   const url = window.URL.createObjectURL(new Blob([response.data]));
   const link = document.createElement('a');
   link.href = url;
-  link.setAttribute('download', `survey_${Date.now()}.qsf`);
+  const fileName = `${surveyData.scaleName.replace(/[^a-z0-9]/gi, '_')}_${Date.now()}.txt`;
+  link.setAttribute('download', fileName);
   document.body.appendChild(link);
   link.click();
   link.remove();

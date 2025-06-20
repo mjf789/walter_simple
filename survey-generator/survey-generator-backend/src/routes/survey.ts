@@ -3,7 +3,8 @@ import { surveyController } from '../controllers/surveyController';
 
 const router = Router();
 
-router.post('/generate-qsf', surveyController.generateQSF);
-router.post('/download/:id', surveyController.downloadQSF);
+// TXT generation routes
+router.post('/generate-txt', surveyController.generateTXT);
+router.post('/download-txt', surveyController.downloadTXT);
 
 export default router;
